@@ -239,6 +239,7 @@ void app_main()
 #endif
     BaseType_t result_ConMon = xTaskCreatePinnedToCore(connectivity_monitor_task, "conn_monitor", 4096, NULL, 3, NULL, 1);
 
+    printf("========================================\n\n");
     if (result_SDIO == pdPASS)
         ESP_LOGI("SDIO_Log_Task", "Task created successfully");
     else
@@ -258,6 +259,8 @@ void app_main()
         ESP_LOGI("conn_monitor", "Task created successfully");
     else
         ESP_LOGE("conn_monitor", "Task creation failed");
+
+    printf("========================================\n\n");
 
     while (1)
     {
@@ -439,7 +442,7 @@ void SDIO_Log_Task_init(void *pvParameters) // WORKS! Needs testing
 
                 if (ret != ESP_OK)
                 {
-                    prev_reset ++;
+                    prev_reset++;
                     ESP_LOGI(TAG, "ERROR! : %s is not Created // Appedended", LOG_CSV.name);
                     if (ret == ESP_FAIL)
                     {
@@ -458,13 +461,11 @@ void SDIO_Log_Task_init(void *pvParameters) // WORKS! Needs testing
                     ESP_LOGI(TAG, "Filesystem mounted");
                     prev_reset = 0;
                 }
-                    
-                
             }
             else
             {
                 SDIO_SD_DeInit();
-                while(1)
+                while (1)
                 {
                     ESP_LOGE(TAG, "SDIO_Logging is Down");
                     vTaskDelay(pdMS_TO_TICKS(5000));
@@ -476,6 +477,6 @@ void SDIO_Log_Task_init(void *pvParameters) // WORKS! Needs testing
 
             ESP_LOGI(TAG, "Logged CAN message to %s", LOG_CSV.name);
         }
-        vTaskDelay(pdMS_TO_TICKS(50));
+        vTaskDelay(pdMS_TO_TICKS(60));
     }
 }
